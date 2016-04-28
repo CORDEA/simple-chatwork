@@ -1,0 +1,17 @@
+{
+    "name": "Simple Chatwork",
+    "version": "0.0.1",
+    "description": "Excluding the noisy notification from chatwork.",
+    "content_scripts": [{
+        "matches": [
+            "https://www.chatwork.com/*"
+        ],
+        "js":      ["content.js"],
+        "run_at": "document_idle"
+    }],
+    "permissions" : [
+        "tabs",
+        "https://www.chatwork.com/*"
+    ],
+    "manifest_version": 2
+}
