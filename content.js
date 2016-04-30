@@ -33,4 +33,14 @@ content.hideIcon_ = function() {
     icons[1].style = "width: 100%; border-radius: 3px";
 }
 
+content.getRooms_ = function() {
+    var rooms = document.getElementById("_roomListItems").childNodes;
+    for (var i in rooms) {
+        var room = rooms[i];
+        if (room instanceof HTMLElement) {
+            var name = room.getAttribute("aria-label");
+        }
+    }
+}
+
 content.hideIcon_();
