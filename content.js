@@ -86,7 +86,11 @@ content.hideUserIcons_ = function() {
         console.log(name);
         if (typeof(name) != "undefined" && name.includes("chatTimeLineMessage")) {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
-            avator[0].style = "display: none";
+            var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
+            if (avator.length > 0) {
+                avator[1].style = "display: none";
+            }
+            message[0].style = "padding: 0px";
         }
     }
 }
