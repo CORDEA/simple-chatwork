@@ -61,5 +61,17 @@ content.getRooms_ = function() {
     return validRooms;
 }
 
+content.hideRoomIcons_ = function() {
+    var rooms = content.getRooms_();
+    for (var k in rooms) {
+        var room = rooms[k];
+        var icon = room.getElementsByClassName("roomIcon");
+        var meta = room.getElementsByClassName("chatListMeta");
+        icon[0].style = "display: none";
+        meta[0].className = "";
+    }
+}
+
 content.hideIcon_();
+content.hideRoomIcons_();
 content.hideTopBarContents_();
