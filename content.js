@@ -35,6 +35,11 @@ content.hideIcon_ = function() {
     rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
 }
 
+content.hideTopBarContents_ = function() {
+    var info = document.getElementById("_openInfomation");
+    info.style = "display: none";
+}
+
 content.hideRooms_ = function() {
     var rooms = content.getRooms_();
     // FIXME
@@ -57,3 +62,4 @@ content.getRooms_ = function() {
 }
 
 content.hideIcon_();
+content.hideTopBarContents_();
