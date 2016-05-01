@@ -31,16 +31,29 @@ content.hideIcon_ = function() {
     icons[0].style = "display: none";
     icons[2].style = "display: none";
     icons[1].style = "width: 100%; border-radius: 3px";
+    var rooms = document.getElementById("_roomListItems");
+    rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
+}
+
+content.hideRooms_ = function() {
+    var rooms = content.getRooms_();
+    // FIXME
+    if ("test" in rooms) {
+        rooms["test"].style = "display: none";
+    }
 }
 
 content.getRooms_ = function() {
     var rooms = document.getElementById("_roomListItems").childNodes;
+    var validRooms = {};
     for (var i in rooms) {
         var room = rooms[i];
         if (room instanceof HTMLElement) {
             var name = room.getAttribute("aria-label");
+            validRooms[name] = room;
         }
     }
+    return validRooms;
 }
 
 content.hideIcon_();
