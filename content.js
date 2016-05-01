@@ -19,6 +19,14 @@
 
 content = {}
 
+content.init_ = function() {
+    var timeline = document.getElementById("_timeLine");
+    timeline.addEventListener("DOMNodeInserted", content.hideUserIcons_);
+
+    var rooms = document.getElementById("_roomListItems");
+    rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
+}
+
 content.hideIcon_ = function() {
     var chats = document.getElementsByClassName("_message chatTimeLineMessage chatTimeLineMessageAnim clearfix");
     for (var i in chats) {
@@ -31,8 +39,6 @@ content.hideIcon_ = function() {
     icons[0].style = "display: none";
     icons[2].style = "display: none";
     icons[1].style = "width: 100%; border-radius: 3px";
-    var rooms = document.getElementById("_roomListItems");
-    rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
 }
 
 content.hideTopBarContents_ = function() {
@@ -72,6 +78,21 @@ content.hideRoomIcons_ = function() {
     }
 }
 
+content.hideUserIcons_ = function() {
+    var timelines = document.getElementById("_timeLine").childNodes;
+    for (var i in timelines) {
+        var timeline = timelines[i];
+        var name = timeline.className;
+        console.log(name);
+        if (typeof(name) != "undefined" && name.includes("chatTimeLineMessage")) {
+            var avator = timeline.getElementsByClassName("avatarSpeaker");
+            avator[0].style = "display: none";
+        }
+    }
+}
+
+content.init_();
 content.hideIcon_();
 content.hideRoomIcons_();
 content.hideTopBarContents_();
+content.hideUserIcons_();
