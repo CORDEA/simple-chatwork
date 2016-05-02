@@ -6,11 +6,13 @@
         "matches": [
             "https://www.chatwork.com/*"
         ],
-        "js":      ["content.js"],
+        "js":      ["constants.js", "content.js"],
         "run_at": "document_idle"
     }],
+    "options_page": "options.html",
     "permissions" : [
         "tabs",
+        "storage",
         "https://www.chatwork.com/*"
     ],
     "manifest_version": 2
