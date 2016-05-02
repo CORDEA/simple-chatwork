@@ -26,13 +26,13 @@ content.init_ = function() {
     var rooms = document.getElementById("_roomListItems");
     rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
     rooms.addEventListener("DOMNodeInserted", content.hideRoomIcons_);
+
+    var mention = document.getElementById("_chatToUnreadStatus");
+    mention.addEventListener("DOMAttrModified", content.showRoomsIfMention_);
 }
 
 content.hideIcon_ = function() {
     var chats = document.getElementsByClassName("_message chatTimeLineMessage chatTimeLineMessageAnim clearfix");
-    for (var i in chats) {
-        console.log(chats[i]);
-    }
     var chatFilterList = document.getElementById("_chatFilterList");
     chatFilterList.className = "cwTextUnselectable _cwBB";
     chatFilterList.style = "position: absolute; top: 6px; left: 40px; right: 40px;"
@@ -47,12 +47,29 @@ content.hideTopBarContents_ = function() {
     info.style = "display: none";
 }
 
+content.showRoomsIfMention_ = function() {
+    var rooms = content.getRooms_();
+    // FIXME
+    if ("test" in rooms) {
+        if (content.isMention_(rooms["test"])) {
+            rooms["test"].style = "";
+        }
+    }
+}
+
 content.hideRooms_ = function() {
     var rooms = content.getRooms_();
     // FIXME
     if ("test" in rooms) {
-        rooms["test"].style = "display: none";
+        if (!content.isMention_(rooms["test"])) {
+            rooms["test"].style = "display: none";
+        }
     }
+}
+
+content.isMention_ = function(room) {
+    var mention = room.getElementsByClassName("_mentionLabel");
+    return mention.length > 0;
 }
 
 content.getRooms_ = function() {
@@ -75,7 +92,6 @@ content.hideRoomIcons_ = function() {
         var icon = room.getElementsByClassName("roomIcon");
         var meta = room.getElementsByClassName("chatListMeta");
         icon[0].style = "display: none";
-        console.log(meta);
         if (meta.length > 0) {
             meta[0].className = "";
         }
@@ -87,7 +103,6 @@ content.hideUserIcons_ = function() {
     for (var i in timelines) {
         var timeline = timelines[i];
         var name = timeline.className;
-        console.log(name);
         if (typeof(name) != "undefined" && name.includes("chatTimeLineMessage")) {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
             var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
@@ -102,5 +117,6 @@ content.hideUserIcons_ = function() {
 content.init_();
 content.hideIcon_();
 content.hideRoomIcons_();
+content.hideRooms_();
 content.hideTopBarContents_();
 content.hideUserIcons_();
