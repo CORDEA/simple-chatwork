@@ -25,6 +25,7 @@ content.init_ = function() {
 
     var rooms = document.getElementById("_roomListItems");
     rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
+    rooms.addEventListener("DOMNodeInserted", content.hideRoomIcons_);
 }
 
 content.hideIcon_ = function() {
@@ -74,7 +75,10 @@ content.hideRoomIcons_ = function() {
         var icon = room.getElementsByClassName("roomIcon");
         var meta = room.getElementsByClassName("chatListMeta");
         icon[0].style = "display: none";
-        meta[0].className = "";
+        console.log(meta);
+        if (meta.length > 0) {
+            meta[0].className = "";
+        }
     }
 }
 
@@ -88,7 +92,7 @@ content.hideUserIcons_ = function() {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
             var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
             if (avator.length > 0) {
-                avator[1].style = "display: none";
+                avator[0].style = "display: none";
             }
             message[0].style = "padding: 0px";
         }
