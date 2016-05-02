@@ -19,6 +19,8 @@
 
 content = {}
 
+content.hideRoomList = undefined;
+
 content.init_ = function() {
     var timeline = document.getElementById("_timeLine");
     timeline.addEventListener("DOMNodeInserted", content.hideUserIcons_);
@@ -54,23 +56,49 @@ content.hideTopBarContents_ = function() {
 }
 
 content.showRoomsIfMention_ = function() {
-    var rooms = content.getRooms_();
-    // FIXME
-    if ("test" in rooms) {
-        if (content.isMention_(rooms["test"])) {
-            rooms["test"].style = "";
+    content.getHideRoomList_(function(hideRooms) {
+        var rooms = content.getRooms_();
+        for (var i in hideRooms) {
+            if (hideRooms[i] in rooms) {
+                if (content.isMention_(rooms[hideRooms[i]])) {
+                    rooms[hideRooms[i]].style = "";
+                }
+            }
         }
-    }
+    });
 }
 
 content.hideRooms_ = function() {
-    var rooms = content.getRooms_();
-    // FIXME
-    if ("test" in rooms) {
-        if (!content.isMention_(rooms["test"])) {
-            rooms["test"].style = "display: none";
+    content.getHideRoomList_(function(hideRooms) {
+        var rooms = content.getRooms_();
+        for (var i in hideRooms) {
+            if (hideRooms[i] in rooms) {
+                if (!content.isMention_(rooms[hideRooms[i]])) {
+                    rooms[hideRooms[i]].style = "display: none";
+                }
+            }
         }
+    });
+}
+
+content.getHideRoomList_ = function(func) {
+    if (content.hideRoomList !== undefined) {
+        func(content.hideRoomList);
+        return;
     }
+    var c = constants;
+    var get = {};
+    get[c.HIDE_LIST_KEY] = "";
+
+    chrome.storage.sync.get(get
+            , function(items) {
+                var listString = items[c.HIDE_LIST_KEY];
+                var list = listString.split("\n");
+                if (list.length > 0) {
+                    content.hideRoomList = list;
+                    func(list);
+                }
+            });
 }
 
 content.isMention_ = function(room) {
@@ -109,7 +137,7 @@ content.hideUserIcons_ = function() {
     for (var i in timelines) {
         var timeline = timelines[i];
         var name = timeline.className;
-        if (typeof(name) != "undefined" && name.includes("chatTimeLineMessage")) {
+        if (name !== undefined && name.includes("chatTimeLineMessage")) {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
             var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
             if (avator.length > 0) {
