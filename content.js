@@ -29,6 +29,12 @@ content.init_ = function() {
 
     var mention = document.getElementById("_chatToUnreadStatus");
     mention.addEventListener("DOMAttrModified", content.showRoomsIfMention_);
+
+    content.hideIcon_();
+    content.hideRoomIcons_();
+    content.hideRooms_();
+    content.hideTopBarContents_();
+    content.hideUserIcons_();
 }
 
 content.hideIcon_ = function() {
@@ -115,8 +121,4 @@ content.hideUserIcons_ = function() {
 }
 
 content.init_();
-content.hideIcon_();
-content.hideRoomIcons_();
-content.hideRooms_();
-content.hideTopBarContents_();
-content.hideUserIcons_();
+
