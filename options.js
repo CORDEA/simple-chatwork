@@ -23,19 +23,23 @@ options.restore = function() {
     var c = constants;
     var get = {}
     get[c.HIDE_LIST_KEY] = ""
+    get[c.IGNORE_LIST_KEY] = ""
 
     chrome.storage.sync.get(get
             , function(items) {
                 document.getElementById("hide-list").value = items[c.HIDE_LIST_KEY];
+                document.getElementById("ignore-list").value = items[c.IGNORE_LIST_KEY];
             });
 }
 
 options.save = function() {
-    var list = document.getElementById("hide-list").value;
+    var hideList = document.getElementById("hide-list").value;
+    var ignoreList = document.getElementById("ignore-list").value;
     var c = constants;
 
     var set = {};
-    set[c.HIDE_LIST_KEY] = list;
+    set[c.HIDE_LIST_KEY] = hideList;
+    set[c.IGNORE_LIST_KEY] = ignoreList;
 
     chrome.storage.sync.set(set
             , function() {

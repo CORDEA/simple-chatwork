@@ -9,17 +9,23 @@
         <h2>Simple Chatwork</h2>
         
         <div id="contents">
-            <h3>
-                Flower
-            </h3>
-            <form accept-charset="UTF-8" id="form">
-                <div>
+            <div id="container">
+                <div class="form">
+                    <h3>
+                        Hide chat room
+                    </h3>
                     <textarea autofocus="autofocus" class="input" id="hide-list" ></textarea>
                 </div>
-                <div id="submit-container">
-                    <input type="button" id="submit" value="Save">
+                <div class="form">
+                    <h3>
+                        Hide "Unread" badge
+                    </h3>
+                    <textarea autofocus="autofocus" class="input" id="ignore-list" ></textarea>
                 </div>
-            </form>
+            </div>
+            <div id="submit-container">
+                <input type="button" id="submit" value="Save">
+            </div>
         </div>
     </body>
 </html>

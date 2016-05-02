@@ -20,6 +20,7 @@
 content = {}
 
 content.hideRoomList = undefined;
+content.ignoreRoomList = undefined;
 
 content.init_ = function() {
     var timeline = document.getElementById("_timeLine");
@@ -28,6 +29,7 @@ content.init_ = function() {
     var rooms = document.getElementById("_roomListItems");
     rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
     rooms.addEventListener("DOMNodeInserted", content.hideRoomIcons_);
+    rooms.addEventListener("DOMNodeInserted", content.hideUnreadBadge_);
 
     var mention = document.getElementById("_chatToUnreadStatus");
     mention.addEventListener("DOMAttrModified", content.showRoomsIfMention_);
@@ -35,6 +37,7 @@ content.init_ = function() {
     content.hideIcon_();
     content.hideRoomIcons_();
     content.hideRooms_();
+    content.hideUnreadBadge_();
     content.hideTopBarContents_();
     content.hideUserIcons_();
 }
@@ -56,7 +59,10 @@ content.hideTopBarContents_ = function() {
 }
 
 content.showRoomsIfMention_ = function() {
-    content.getHideRoomList_(function(hideRooms) {
+    content.getBlackListRooms_(function(hideRooms) {
+        if (hideRooms.length === 0) {
+            return;
+        }
         var rooms = content.getRooms_();
         for (var i in hideRooms) {
             if (hideRooms[i] in rooms) {
@@ -65,11 +71,14 @@ content.showRoomsIfMention_ = function() {
                 }
             }
         }
-    });
+    }, constants.BlackListType.HIDE);
 }
 
 content.hideRooms_ = function() {
-    content.getHideRoomList_(function(hideRooms) {
+    content.getBlackListRooms_(function(hideRooms) {
+        if (hideRooms.length === 0) {
+            return;
+        }
         var rooms = content.getRooms_();
         for (var i in hideRooms) {
             if (hideRooms[i] in rooms) {
@@ -78,25 +87,70 @@ content.hideRooms_ = function() {
                 }
             }
         }
-    });
+    }, constants.BlackListType.HIDE);
 }
 
-content.getHideRoomList_ = function(func) {
-    if (content.hideRoomList !== undefined) {
-        func(content.hideRoomList);
-        return;
+content.hideUnreadBadge_ = function() {
+    content.getBlackListRooms_(function(ignoreRooms) {
+        if (ignoreRooms.length === 0) {
+            return;
+        }
+        var rooms = content.getRooms_();
+        for (var i in ignoreRooms) {
+            if (ignoreRooms[i] in rooms) {
+                var room = rooms[ignoreRooms[i]];
+                var badge = room.getElementsByClassName("_unreadBadge unread");
+                var mention = room.getElementsByClassName("_mentionLabel");
+                if (badge.length > 0) {
+                    badge[0].style = "display: none";
+                }
+                if (mention.length > 0) {
+                    mention[0].style = "margin: 0px";
+                }
+            }
+        }
+    }, constants.BlackListType.IGNORE);
+}
+
+content.getBlackListRooms_ = function(func, type) {
+    var HIDE = constants.BlackListType.HIDE;
+    var IGNORE = constants.BlackListType.IGNORE;
+    switch (type) {
+        case HIDE:
+            if (content.hideRoomList !== undefined) {
+                func(content.hideRoomList);
+                return;
+            }
+            break;
+        case IGNORE:
+            if (content.ignoreRoomList !== undefined) {
+                func(content.ignoreRoomList);
+                return;
+            }
+            break;
     }
+    
     var c = constants;
     var get = {};
     get[c.HIDE_LIST_KEY] = "";
+    get[c.IGNORE_LIST_KEY] = "";
 
     chrome.storage.sync.get(get
             , function(items) {
-                var listString = items[c.HIDE_LIST_KEY];
-                var list = listString.split("\n");
-                if (list.length > 0) {
-                    content.hideRoomList = list;
-                    func(list);
+                var hideListString = items[c.HIDE_LIST_KEY];
+                var ignoreListString = items[c.IGNORE_LIST_KEY];
+                var hideList = hideListString.split("\n");
+                var ignoreList = ignoreListString.split("\n");
+                content.hideRoomList = hideList;
+                content.ignoreRoomList = ignoreList;
+
+                switch (type) {
+                    case HIDE:
+                        func(hideList);
+                        break;
+                    case IGNORE:
+                        func(ignoreList)
+                        break;
                 }
             });
 }

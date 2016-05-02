@@ -19,5 +19,10 @@
 
 var constants = {};
 
+constants.BlackListType = {
+    HIDE: 0,
+    IGNORE: 1
+};
 
 constants.HIDE_LIST_KEY = "HideList";
+constants.IGNORE_LIST_KEY = "IgnoreList";

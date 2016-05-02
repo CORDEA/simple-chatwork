@@ -32,3 +32,11 @@ textarea {
     text-align: center;
     width: 80px;
 }
+
+#container {
+    display: flex;
+}
+
+.form {
+    margin: 5px;
+}
