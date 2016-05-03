@@ -23,6 +23,11 @@ content.hideRoomList = undefined;
 content.ignoreRoomList = undefined;
 
 content.init_ = function() {
+    var title = document.getElementsByTagName("title")[0];
+    title.innerText = constants.DEFAULT_TITLE;
+    new MutationObserver(content.fixTitle_)
+        .observe(title, {childList: true});
+
     var timeline = document.getElementById("_timeLine");
     new MutationObserver(content.hideUserIcons_)
         .observe(timeline, {childList: true});
@@ -31,14 +36,19 @@ content.init_ = function() {
     new MutationObserver(content.hideUnnecessaryRoomItems_)
         .observe(rooms, {childList: true});
 
-    var title = document.getElementById("_roomTitle");
+    var roomTitle = document.getElementById("_roomTitle");
     new MutationObserver(content.fixRoomLayout_)
-        .observe(title, {childList: true});
+        .observe(roomTitle, {childList: true});
 
     content.hideMenuIcon_();
     content.hideUnnecessaryRoomItems_();
     content.hideTopBarContents_();
     content.hideUserIcons_();
+}
+
+content.fixTitle_ = function(mutations) {
+    var target = mutations[0].target;
+    target.innerText = constants.DEFAULT_TITLE;
 }
 
 content.hideMenuIcon_ = function() {

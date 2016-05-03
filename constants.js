@@ -24,5 +24,7 @@ constants.BlackListType = {
     IGNORE: 1
 };
 
+constants.DEFAULT_TITLE = "Chatwork";
+
 constants.HIDE_LIST_KEY = "HideList";
 constants.IGNORE_LIST_KEY = "IgnoreList";
