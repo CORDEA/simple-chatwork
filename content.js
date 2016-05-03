@@ -196,7 +196,9 @@ content.hideUserIcons_ = function() {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
             var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
             if (avator.length > 0) {
-                avator[0].style = "display: none";
+                avator[0].style = "height: 0px; width: 0px";
+                var image = avator[0].getElementsByTagName("img");
+                image[0].style = "height: 0px; width: 0px";
             }
             message[0].style = "padding: 0px";
         }
