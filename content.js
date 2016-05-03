@@ -24,30 +24,24 @@ content.ignoreRoomList = undefined;
 
 content.init_ = function() {
     var timeline = document.getElementById("_timeLine");
-    timeline.addEventListener("DOMNodeInserted", content.hideUserIcons_);
+    new MutationObserver(content.hideUserIcons_)
+        .observe(timeline, {childList: true});
 
     var rooms = document.getElementById("_roomListItems");
-    rooms.addEventListener("DOMNodeInserted", content.hideRooms_);
-    rooms.addEventListener("DOMNodeInserted", content.hideRoomIcons_);
-    rooms.addEventListener("DOMNodeInserted", content.hideUnreadBadge_);
-
-    var mention = document.getElementById("_chatToUnreadStatus");
-    mention.addEventListener("DOMAttrModified", content.showRoomsIfMention_);
+    new MutationObserver(content.hideUnnecessaryRoomItems_)
+        .observe(rooms, {childList: true});
 
     var title = document.getElementById("_roomTitle");
-    var titleObserver = new MutationObserver(content.fixRoomLayout_);
-    var titleConf = {childList: true};
-    titleObserver.observe(title, titleConf);
+    new MutationObserver(content.fixRoomLayout_)
+        .observe(title, {childList: true});
 
-    content.hideIcon_();
-    content.hideRoomIcons_();
-    content.hideRooms_();
-    content.hideUnreadBadge_();
+    content.hideMenuIcon_();
+    content.hideUnnecessaryRoomItems_();
     content.hideTopBarContents_();
     content.hideUserIcons_();
 }
 
-content.hideIcon_ = function() {
+content.hideMenuIcon_ = function() {
     var chats = document.getElementsByClassName("_message chatTimeLineMessage chatTimeLineMessageAnim clearfix");
     var chatFilterList = document.getElementById("_chatFilterList");
     chatFilterList.className = "cwTextUnselectable _cwBB";
@@ -65,20 +59,10 @@ content.hideTopBarContents_ = function() {
     contact.style = "display: none";
 }
 
-content.showRoomsIfMention_ = function() {
-    content.getBlackListRooms_(function(hideRooms) {
-        if (hideRooms.length === 0) {
-            return;
-        }
-        var rooms = content.getRooms_();
-        for (var i in hideRooms) {
-            if (hideRooms[i] in rooms) {
-                if (content.isMention_(rooms[hideRooms[i]])) {
-                    rooms[hideRooms[i]].style = "";
-                }
-            }
-        }
-    }, constants.BlackListType.HIDE);
+content.hideUnnecessaryRoomItems_ = function() {
+    content.hideRooms_();
+    content.hideRoomIcons_();
+    content.hideUnreadBadge_();
 }
 
 content.hideRooms_ = function() {
