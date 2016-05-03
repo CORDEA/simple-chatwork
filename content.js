@@ -56,6 +56,8 @@ content.hideIcon_ = function() {
 content.hideTopBarContents_ = function() {
     var info = document.getElementById("_openInfomation");
     info.style = "display: none";
+    var contact = document.getElementById("_openContactWindow");
+    contact.style = "display: none";
 }
 
 content.showRoomsIfMention_ = function() {
