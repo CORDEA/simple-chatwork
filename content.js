@@ -34,6 +34,11 @@ content.init_ = function() {
     var mention = document.getElementById("_chatToUnreadStatus");
     mention.addEventListener("DOMAttrModified", content.showRoomsIfMention_);
 
+    var title = document.getElementById("_roomTitle");
+    var titleObserver = new MutationObserver(content.fixRoomLayout_);
+    var titleConf = {childList: true};
+    titleObserver.observe(title, titleConf);
+
     content.hideIcon_();
     content.hideRoomIcons_();
     content.hideRooms_();
@@ -204,5 +209,15 @@ content.hideUserIcons_ = function() {
     }
 }
 
-content.init_();
+content.fixRoomLayout_ = function(mutations) {
+    mutations.forEach(function(mutation) {
+        var nodes = mutation.addedNodes;
+        if (nodes.length > 0) {
+            if (nodes[0].className.includes("_roomTitleText")) {
+                nodes[0].style = "font-size: small";
+            }
+        }
+    });
+}
 
+content.init_();
