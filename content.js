@@ -205,13 +205,31 @@ content.fixTimelineLayout_ = function() {
                 image[0].style = "height: 0px; width: 0px";
             }
             var span = nameContainer[0].getElementsByTagName("span");
-            if (span.length > 0) {
-                span[0].style = "color: black";
-            }
             if (org.length > 0) {
                 org[0].style = "display: none";
             }
             message[0].style = "padding: 0px";
+            if (timeline.className.includes("chatTimeLineMessageMine")) {
+                if (span.length > 0) {
+                    span[0].style = "color: gray";
+                }
+                var pre = timeline.getElementsByTagName("pre");
+                if (pre.length > 0) {
+                    pre[0].style = "color: gray";
+                    var repDiv = pre[0].getElementsByClassName("chatTimeLineReply _replyMessage");
+                    if (repDiv.length > 0) {
+                        repDiv[0].style = "background: gray";
+                    }
+                    var toSpan = pre[0].getElementsByClassName("chatTimeLineTo");
+                    if (toSpan.length > 0) {
+                        toSpan[0].style = "background: gray";
+                    }
+                }
+            } else {
+                if (span.length > 0) {
+                    span[0].style = "color: black";
+                }
+            }
         }
     }
 }
