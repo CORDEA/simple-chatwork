@@ -29,7 +29,7 @@ content.init_ = function() {
         .observe(title, {childList: true});
 
     var timeline = document.getElementById("_timeLine");
-    new MutationObserver(content.hideUserIcons_)
+    new MutationObserver(content.fixTimelineLayout_)
         .observe(timeline, {childList: true});
 
     var rooms = document.getElementById("_roomListItems");
@@ -43,7 +43,7 @@ content.init_ = function() {
     content.hideMenuIcon_();
     content.hideUnnecessaryRoomItems_();
     content.hideTopBarContents_();
-    content.hideUserIcons_();
+    content.fixTimelineLayout_();
 }
 
 content.fixTitle_ = function(mutations) {
@@ -189,18 +189,27 @@ content.hideRoomIcons_ = function() {
     }
 }
 
-content.hideUserIcons_ = function() {
+content.fixTimelineLayout_ = function() {
     var timelines = document.getElementById("_timeLine").childNodes;
     for (var i in timelines) {
         var timeline = timelines[i];
         var name = timeline.className;
         if (name !== undefined && name.includes("chatTimeLineMessage")) {
             var avator = timeline.getElementsByClassName("avatarSpeaker");
+            var nameContainer = timeline.getElementsByClassName("_speakerName chatName");
+            var org = timeline.getElementsByClassName("chatNameOrgname");
             var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
             if (avator.length > 0) {
                 avator[0].style = "height: 0px; width: 0px";
                 var image = avator[0].getElementsByTagName("img");
                 image[0].style = "height: 0px; width: 0px";
+            }
+            var span = nameContainer[0].getElementsByTagName("span");
+            if (span.length > 0) {
+                span[0].style = "color: black";
+            }
+            if (org.length > 0) {
+                org[0].style = "display: none";
             }
             message[0].style = "padding: 0px";
         }
