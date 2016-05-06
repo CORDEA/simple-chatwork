@@ -180,7 +180,9 @@ content.hideRoomIcons_ = function() {
         var room = rooms[k];
         var icon = room.getElementsByClassName("roomIcon");
         var meta = room.getElementsByClassName("chatListMeta");
-        icon[0].style = "display: none";
+        if (icon.length > 0) {
+            icon[0].style = "display: none";
+        }
         if (meta.length > 0) {
             meta[0].className = "";
         }
