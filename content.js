@@ -76,7 +76,7 @@ content.hideUnnecessaryRoomItems_ = function() {
 }
 
 content.hideRooms_ = function() {
-    content.getBlackListRooms_(function(hideRooms) {
+    content.getValueFromStorage_(function(hideRooms) {
         if (hideRooms.length === 0) {
             return;
         }
@@ -88,11 +88,11 @@ content.hideRooms_ = function() {
                 }
             }
         }
-    }, constants.BlackListType.HIDE);
+    }, constants.StorageType.HIDE);
 }
 
 content.hideUnreadBadge_ = function() {
-    content.getBlackListRooms_(function(ignoreRooms) {
+    content.getValueFromStorage_(function(ignoreRooms) {
         if (ignoreRooms.length === 0) {
             return;
         }
@@ -110,12 +110,17 @@ content.hideUnreadBadge_ = function() {
                 }
             }
         }
-    }, constants.BlackListType.IGNORE);
+    }, constants.StorageType.IGNORE);
 }
 
-content.getBlackListRooms_ = function(func, type) {
-    var HIDE = constants.BlackListType.HIDE;
-    var IGNORE = constants.BlackListType.IGNORE;
+content.getValueFromStorage_ = function(func, type) {
+    var HIDE = constants.StorageType.HIDE
+    var IGNORE = constants.StorageType.IGNORE;
+    var HIDE_ROOM = constants.StorageType.HIDE_ROOM;
+    var HIDE_USER = constants.StorageType.HIDE_USER;
+    var USER_COLOR = constants.StorageType.USER_COLOR;
+    var OWN_POST = constants.StorageType.OWN_POST;
+
     switch (type) {
         case HIDE:
             if (content.hideRoomList !== undefined) {
@@ -129,12 +134,40 @@ content.getBlackListRooms_ = function(func, type) {
                 return;
             }
             break;
+        case HIDE_ROOM:
+            if (content.isHideRoom !== undefined) {
+                func(content.isHideRoom);
+                return;
+            }
+            break;
+        case HIDE_USER:
+            if (content.isHideUser !== undefined) {
+                func(content.isHideUser);
+                return;
+            }
+            break;
+        case USER_COLOR:
+            if (content.userColor !== undefined) {
+                func(content.userColor);
+                return;
+            }
+            break;
+        case OWN_POST:
+            if (content.isOwnPost !== undefined) {
+                func(content.isOwnPost);
+                return;
+            }
+            break;
     }
     
     var c = constants;
     var get = {};
-    get[c.HIDE_LIST_KEY] = "";
-    get[c.IGNORE_LIST_KEY] = "";
+    get[c.HIDE_LIST_KEY] = ""
+    get[c.IGNORE_LIST_KEY] = ""
+    get[c.HIDE_ROOM_ICON_KEY] = false;
+    get[c.HIDE_USER_ICON_KEY] = false;
+    get[c.GRAY_OWN_POST_KEY] = false;
+    get[c.USER_NAME_COLOR_KEY] = "";
 
     chrome.storage.sync.get(get
             , function(items) {
@@ -144,6 +177,10 @@ content.getBlackListRooms_ = function(func, type) {
                 var ignoreList = ignoreListString.split("\n");
                 content.hideRoomList = hideList;
                 content.ignoreRoomList = ignoreList;
+                content.isHideUser = items[c.HIDE_USER_ICON_KEY];
+                content.isHideRoom = items[c.HIDE_ROOM_ICON_KEY];
+                content.userColor = items[c.USER_NAME_COLOR_KEY];
+                content.isOwnPost = items[c.GRAY_OWN_POST_KEY];
 
                 switch (type) {
                     case HIDE:
@@ -151,6 +188,18 @@ content.getBlackListRooms_ = function(func, type) {
                         break;
                     case IGNORE:
                         func(ignoreList)
+                        break;
+                    case HIDE_ROOM:
+                        func(content.isHideRoom);
+                        break;
+                    case HIDE_USER:
+                        func(content.isHideUser);
+                        break;
+                    case OWN_POST:
+                        func(content.isOwnPost);
+                        break;
+                    case USER_COLOR:
+                        func(content.userColor);
                         break;
                 }
             });
@@ -210,21 +259,7 @@ content.fixTimelineLayout_ = function() {
             }
             message[0].style = "padding: 0px";
             if (timeline.className.includes("chatTimeLineMessageMine")) {
-                if (span.length > 0) {
-                    span[0].style = "color: gray";
-                }
-                var pre = timeline.getElementsByTagName("pre");
-                if (pre.length > 0) {
-                    pre[0].style = "color: gray";
-                    var repDiv = pre[0].getElementsByClassName("chatTimeLineReply _replyMessage");
-                    if (repDiv.length > 0) {
-                        repDiv[0].style = "background: gray";
-                    }
-                    var toSpan = pre[0].getElementsByClassName("chatTimeLineTo");
-                    if (toSpan.length > 0) {
-                        toSpan[0].style = "background: gray";
-                    }
-                }
+                content.changeGrayOfOwnPosts_(span, timeline);
             } else {
                 if (span.length > 0) {
                     span[0].style = "color: black";
@@ -232,6 +267,28 @@ content.fixTimelineLayout_ = function() {
             }
         }
     }
+}
+
+content.changeGrayOfOwnPosts_ = function(timeline, span) {
+    content.getValueFromStorage_(function(isOwnPost) {
+        if (isOwnPost) {
+            if (span.length > 0) {
+                span[0].style = "color: gray";
+            }
+            var pre = timeline.getElementsByTagName("pre");
+            if (pre.length > 0) {
+                pre[0].style = "color: gray";
+                var repDiv = pre[0].getElementsByClassName("chatTimeLineReply _replyMessage");
+                if (repDiv.length > 0) {
+                    repDiv[0].style = "background: gray";
+                }
+                var toSpan = pre[0].getElementsByClassName("chatTimeLineTo");
+                if (toSpan.length > 0) {
+                    toSpan[0].style = "background: gray";
+                }
+            }
+        }
+    }, constants.StorageType.OWN_POST);
 }
 
 content.fixRoomLayout_ = function(mutations) {
