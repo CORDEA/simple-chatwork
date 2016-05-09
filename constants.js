@@ -28,3 +28,7 @@ constants.DEFAULT_TITLE = "Chatwork";
 
 constants.HIDE_LIST_KEY = "HideList";
 constants.IGNORE_LIST_KEY = "IgnoreList";
+constants.HIDE_USER_ICON_KEY = "HideUserIcon";
+constants.HIDE_ROOM_ICON_kEY = "HideRoomIcon";
+constants.USER_NAME_COLOR_KEY = "UserNameColor";
+constants.GRAY_OWN_POST_KEY = "GrayOwnPost";
