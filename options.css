@@ -33,8 +33,12 @@ textarea {
     width: 80px;
 }
 
-#container {
+#hide-container {
     display: flex;
+}
+
+#color-container {
+    margin: 15px 5px 5px 5px;
 }
 
 .form {
