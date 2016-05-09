@@ -36,3 +36,14 @@ constants.HIDE_USER_ICON_KEY = "HideUserIcon";
 constants.HIDE_ROOM_ICON_KEY = "HideRoomIcon";
 constants.USER_NAME_COLOR_KEY = "UserNameColor";
 constants.GRAY_OWN_POST_KEY = "GrayOwnPost";
+
+constants.getDefaultValues = function() {
+    var defaults = {};
+    defaults[constants.HIDE_LIST_KEY] = ""
+    defaults[constants.IGNORE_LIST_KEY] = ""
+    defaults[constants.HIDE_ROOM_ICON_KEY] = false;
+    defaults[constants.HIDE_USER_ICON_KEY] = false;
+    defaults[constants.GRAY_OWN_POST_KEY] = false;
+    defaults[constants.USER_NAME_COLOR_KEY] = "";
+    return defaults;
+}
