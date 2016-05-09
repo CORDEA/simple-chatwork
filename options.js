@@ -19,17 +19,10 @@
 
 var options = {};
 
-options.restore = function() {
+options.restore_ = function() {
     var c = constants;
-    var get = {}
-    get[c.HIDE_LIST_KEY] = ""
-    get[c.IGNORE_LIST_KEY] = ""
-    get[c.HIDE_ROOM_ICON_KEY] = false;
-    get[c.HIDE_USER_ICON_KEY] = false;
-    get[c.GRAY_OWN_POST_KEY] = false;
-    get[c.USER_NAME_COLOR_KEY] = "";
+    var get = c.getDefaultValues();
 
-    console.log();
     chrome.storage.sync.get(get
             , function(items) {
                 document.getElementById("hide-list").value = items[c.HIDE_LIST_KEY];
@@ -41,7 +34,7 @@ options.restore = function() {
             });
 }
 
-options.save = function() {
+options.save_ = function() {
     var hideList = document.getElementById("hide-list").value;
     var ignoreList = document.getElementById("ignore-list").value;
     var isHideRoomIcon = document.getElementById("hide-room-icon").checked;
@@ -61,13 +54,13 @@ options.save = function() {
     chrome.storage.sync.set(set
             , function() {
                 document.getElementById("submit").value = "Saved";
-                options.restore();
+                options.restore_();
             });
 }
 
 options.windowOnLoad_ = function() {
-    options.restore();
-    document.getElementById("submit").addEventListener("click",options.save);
+    options.restore_();
+    document.getElementById("submit").addEventListener("click",options.save_);
 }
 
 options.initialize_ = function() {

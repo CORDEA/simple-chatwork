@@ -19,8 +19,7 @@
 
 content = {}
 
-content.hideRoomList = undefined;
-content.ignoreRoomList = undefined;
+content.values = {}
 
 content.init_ = function() {
     var title = document.getElementsByTagName("title")[0];
@@ -114,94 +113,35 @@ content.hideUnreadBadge_ = function() {
 }
 
 content.getValueFromStorage_ = function(func, type) {
-    var HIDE = constants.StorageType.HIDE
-    var IGNORE = constants.StorageType.IGNORE;
-    var HIDE_ROOM = constants.StorageType.HIDE_ROOM;
-    var HIDE_USER = constants.StorageType.HIDE_USER;
-    var USER_COLOR = constants.StorageType.USER_COLOR;
-    var OWN_POST = constants.StorageType.OWN_POST;
+    var c = constants;
 
-    switch (type) {
-        case HIDE:
-            if (content.hideRoomList !== undefined) {
-                func(content.hideRoomList);
-                return;
-            }
-            break;
-        case IGNORE:
-            if (content.ignoreRoomList !== undefined) {
-                func(content.ignoreRoomList);
-                return;
-            }
-            break;
-        case HIDE_ROOM:
-            if (content.isHideRoom !== undefined) {
-                func(content.isHideRoom);
-                return;
-            }
-            break;
-        case HIDE_USER:
-            if (content.isHideUser !== undefined) {
-                func(content.isHideUser);
-                return;
-            }
-            break;
-        case USER_COLOR:
-            if (content.userColor !== undefined) {
-                func(content.userColor);
-                return;
-            }
-            break;
-        case OWN_POST:
-            if (content.isOwnPost !== undefined) {
-                func(content.isOwnPost);
-                return;
-            }
-            break;
+    var HIDE = c.StorageType.HIDE
+    var IGNORE = c.StorageType.IGNORE;
+    var HIDE_ROOM = c.StorageType.HIDE_ROOM;
+    var HIDE_USER = c.StorageType.HIDE_USER;
+    var USER_COLOR = c.StorageType.USER_COLOR;
+    var OWN_POST = c.StorageType.OWN_POST;
+
+    if (content.values[type] !== undefined) {
+        func(content.values[type]);
+        return;
     }
     
-    var c = constants;
-    var get = {};
-    get[c.HIDE_LIST_KEY] = ""
-    get[c.IGNORE_LIST_KEY] = ""
-    get[c.HIDE_ROOM_ICON_KEY] = false;
-    get[c.HIDE_USER_ICON_KEY] = false;
-    get[c.GRAY_OWN_POST_KEY] = false;
-    get[c.USER_NAME_COLOR_KEY] = "";
+    var get = c.getDefaultValues();
 
     chrome.storage.sync.get(get
             , function(items) {
                 var hideListString = items[c.HIDE_LIST_KEY];
                 var ignoreListString = items[c.IGNORE_LIST_KEY];
-                var hideList = hideListString.split("\n");
-                var ignoreList = ignoreListString.split("\n");
-                content.hideRoomList = hideList;
-                content.ignoreRoomList = ignoreList;
-                content.isHideUser = items[c.HIDE_USER_ICON_KEY];
-                content.isHideRoom = items[c.HIDE_ROOM_ICON_KEY];
-                content.userColor = items[c.USER_NAME_COLOR_KEY];
-                content.isOwnPost = items[c.GRAY_OWN_POST_KEY];
 
-                switch (type) {
-                    case HIDE:
-                        func(hideList);
-                        break;
-                    case IGNORE:
-                        func(ignoreList)
-                        break;
-                    case HIDE_ROOM:
-                        func(content.isHideRoom);
-                        break;
-                    case HIDE_USER:
-                        func(content.isHideUser);
-                        break;
-                    case OWN_POST:
-                        func(content.isOwnPost);
-                        break;
-                    case USER_COLOR:
-                        func(content.userColor);
-                        break;
-                }
+                content.values[HIDE] = hideListString.split("\n");
+                content.values[IGNORE] = ignoreListString.split("\n");
+                content.values[HIDE_USER] = items[c.HIDE_USER_ICON_KEY];
+                content.values[HIDE_ROOM] = items[c.HIDE_ROOM_ICON_KEY];
+                content.values[USER_COLOR] = items[c.USER_NAME_COLOR_KEY];
+                content.values[OWN_POST] = items[c.GRAY_OWN_POST_KEY];
+
+                func(content.values[type]);
             });
 }
 
@@ -257,7 +197,7 @@ content.fixTimelineLayout_ = function() {
                 org[0].style = "display: none";
             }
             if (timeline.className.includes("chatTimeLineMessageMine")) {
-                content.changeGrayOfOwnPosts_(span, timeline);
+                content.changeGrayOfOwnPosts_(timeline, span);
             } else {
                 content.changeNameColor_(span);
             }
