@@ -19,9 +19,13 @@
 
 var constants = {};
 
-constants.BlackListType = {
+constants.StorageType = {
     HIDE: 0,
-    IGNORE: 1
+    IGNORE: 1,
+    HIDE_ROOM: 2,
+    HIDE_USER: 3,
+    USER_COLOR: 4,
+    OWN_POST: 5
 };
 
 constants.DEFAULT_TITLE = "Chatwork";
@@ -29,6 +33,6 @@ constants.DEFAULT_TITLE = "Chatwork";
 constants.HIDE_LIST_KEY = "HideList";
 constants.IGNORE_LIST_KEY = "IgnoreList";
 constants.HIDE_USER_ICON_KEY = "HideUserIcon";
-constants.HIDE_ROOM_ICON_kEY = "HideRoomIcon";
+constants.HIDE_ROOM_ICON_KEY = "HideRoomIcon";
 constants.USER_NAME_COLOR_KEY = "UserNameColor";
 constants.GRAY_OWN_POST_KEY = "GrayOwnPost";
