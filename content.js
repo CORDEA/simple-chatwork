@@ -224,18 +224,23 @@ content.getRooms_ = function() {
 }
 
 content.hideRoomIcons_ = function() {
-    var rooms = content.getRooms_();
-    for (var k in rooms) {
-        var room = rooms[k];
-        var icon = room.getElementsByClassName("roomIcon");
-        var meta = room.getElementsByClassName("chatListMeta");
-        if (icon.length > 0) {
-            icon[0].style = "display: none";
+    content.getValueFromStorage_(function(isHideRoom) {
+        if (!isHideRoom) {
+            return;
         }
-        if (meta.length > 0) {
-            meta[0].className = "";
+        var rooms = content.getRooms_();
+        for (var k in rooms) {
+            var room = rooms[k];
+            var icon = room.getElementsByClassName("roomIcon");
+            var meta = room.getElementsByClassName("chatListMeta");
+            if (icon.length > 0) {
+                icon[0].style = "display: none";
+            }
+            if (meta.length > 0) {
+                meta[0].className = "";
+            }
         }
-    }
+    }, constants.StorageType.HIDE_ROOM);
 }
 
 content.fixTimelineLayout_ = function() {
@@ -244,51 +249,71 @@ content.fixTimelineLayout_ = function() {
         var timeline = timelines[i];
         var name = timeline.className;
         if (name !== undefined && name.includes("chatTimeLineMessage")) {
-            var avator = timeline.getElementsByClassName("avatarSpeaker");
             var nameContainer = timeline.getElementsByClassName("_speakerName chatName");
+            content.hideUserIcon_(timeline);
             var org = timeline.getElementsByClassName("chatNameOrgname");
-            var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
-            if (avator.length > 0) {
-                avator[0].style = "height: 0px; width: 0px";
-                var image = avator[0].getElementsByTagName("img");
-                image[0].style = "height: 0px; width: 0px";
-            }
             var span = nameContainer[0].getElementsByTagName("span");
             if (org.length > 0) {
                 org[0].style = "display: none";
             }
-            message[0].style = "padding: 0px";
             if (timeline.className.includes("chatTimeLineMessageMine")) {
                 content.changeGrayOfOwnPosts_(span, timeline);
             } else {
-                if (span.length > 0) {
-                    span[0].style = "color: black";
-                }
+                content.changeNameColor_(span);
             }
         }
     }
 }
 
+content.hideUserIcon_ = function(timeline) {
+    content.getValueFromStorage_(function(isHideUser) {
+        if (!isHideUser) {
+            return;
+        }
+        var message = timeline.getElementsByClassName("chatTimeLineMessageArea");
+        var avator = timeline.getElementsByClassName("avatarSpeaker");
+        if (avator.length > 0) {
+            avator[0].style = "height: 0px; width: 0px";
+            var image = avator[0].getElementsByTagName("img");
+            image[0].style = "height: 0px; width: 0px";
+        }
+        message[0].style = "padding: 0px";
+    }, constants.StorageType.HIDE_USER);
+}
+
 content.changeGrayOfOwnPosts_ = function(timeline, span) {
     content.getValueFromStorage_(function(isOwnPost) {
-        if (isOwnPost) {
-            if (span.length > 0) {
-                span[0].style = "color: gray";
+        if (!isOwnPost) {
+            content.changeNameColor_(span);
+            return;
+        }
+        if (span.length > 0) {
+            span[0].style = "color: gray";
+        }
+        var pre = timeline.getElementsByTagName("pre");
+        if (pre.length > 0) {
+            pre[0].style = "color: gray";
+            var repDiv = pre[0].getElementsByClassName("chatTimeLineReply _replyMessage");
+            if (repDiv.length > 0) {
+                repDiv[0].style = "background: gray";
             }
-            var pre = timeline.getElementsByTagName("pre");
-            if (pre.length > 0) {
-                pre[0].style = "color: gray";
-                var repDiv = pre[0].getElementsByClassName("chatTimeLineReply _replyMessage");
-                if (repDiv.length > 0) {
-                    repDiv[0].style = "background: gray";
-                }
-                var toSpan = pre[0].getElementsByClassName("chatTimeLineTo");
-                if (toSpan.length > 0) {
-                    toSpan[0].style = "background: gray";
-                }
+            var toSpan = pre[0].getElementsByClassName("chatTimeLineTo");
+            if (toSpan.length > 0) {
+                toSpan[0].style = "background: gray";
             }
         }
     }, constants.StorageType.OWN_POST);
+}
+
+content.changeNameColor_ = function(span) {
+    content.getValueFromStorage_(function(userColor) {
+        if (!userColor.startsWith("#")) {
+            return;
+        }
+        if (span.length > 0) {
+            span[0].style = "color: " + userColor;
+        }
+    }, constants.StorageType.USER_COLOR);
 }
 
 content.fixRoomLayout_ = function(mutations) {
