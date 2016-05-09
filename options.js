@@ -24,22 +24,39 @@ options.restore = function() {
     var get = {}
     get[c.HIDE_LIST_KEY] = ""
     get[c.IGNORE_LIST_KEY] = ""
+    get[c.HIDE_ROOM_ICON_KEY] = false;
+    get[c.HIDE_USER_ICON_KEY] = false;
+    get[c.GRAY_OWN_POST_KEY] = false;
+    get[c.USER_NAME_COLOR_KEY] = "";
 
+    console.log();
     chrome.storage.sync.get(get
             , function(items) {
                 document.getElementById("hide-list").value = items[c.HIDE_LIST_KEY];
                 document.getElementById("ignore-list").value = items[c.IGNORE_LIST_KEY];
+                document.getElementById("hide-room-icon").checked = items[c.HIDE_ROOM_ICON_KEY];
+                document.getElementById("hide-user-icon").checked = items[c.HIDE_USER_ICON_KEY];
+                document.getElementById("gray-own-post").checked = items[c.GRAY_OWN_POST_KEY];
+                document.getElementById("user-name-color").value = items[c.USER_NAME_COLOR_KEY];
             });
 }
 
 options.save = function() {
     var hideList = document.getElementById("hide-list").value;
     var ignoreList = document.getElementById("ignore-list").value;
+    var isHideRoomIcon = document.getElementById("hide-room-icon").checked;
+    var isHideUserIcon = document.getElementById("hide-user-icon").checked;
+    var isGrayOwnPost = document.getElementById("gray-own-post").checked;
+    var userNameColor = document.getElementById("user-name-color").value;
     var c = constants;
 
     var set = {};
     set[c.HIDE_LIST_KEY] = hideList;
     set[c.IGNORE_LIST_KEY] = ignoreList;
+    set[c.HIDE_ROOM_ICON_KEY] = isHideRoomIcon;
+    set[c.HIDE_USER_ICON_KEY] = isHideUserIcon;
+    set[c.GRAY_OWN_POST_KEY] = isGrayOwnPost;
+    set[c.USER_NAME_COLOR_KEY] = userNameColor;
 
     chrome.storage.sync.set(set
             , function() {
