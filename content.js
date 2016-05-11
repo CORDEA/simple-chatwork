@@ -263,6 +263,9 @@ content.fixRoomLayout_ = function(mutations) {
             if (nodes[0].className.includes("_roomTitleText")) {
                 nodes[0].style = "font-size: small";
             }
+            if (nodes[1].className.includes("_pin")) {
+                nodes[1].style = "display: none";
+            }
         }
     });
 }
