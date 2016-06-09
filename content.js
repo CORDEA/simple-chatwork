@@ -69,9 +69,9 @@ content.hideTopBarContents_ = function() {
 }
 
 content.hideUnnecessaryRoomItems_ = function() {
-    content.hideRooms_();
     content.hideRoomIcons_();
     content.hideUnreadBadge_();
+    content.hideRooms_();
 }
 
 content.hideRooms_ = function() {
@@ -92,15 +92,17 @@ content.hideRooms_ = function() {
 
 content.hideUnreadBadge_ = function() {
     content.getValueFromStorage_(function(ignoreRooms) {
+        var rooms = content.getRooms_();
+        content.changeUnreadBadge_(rooms, ignoreRooms);
         if (ignoreRooms.length === 0) {
             return;
         }
-        var rooms = content.getRooms_();
         for (var i in ignoreRooms) {
             if (ignoreRooms[i] in rooms) {
                 var room = rooms[ignoreRooms[i]];
                 var badge = room.getElementsByClassName("_unreadBadge unread");
                 var mention = room.getElementsByClassName("_mentionLabel");
+                room.style = "font-weight: 400";
                 if (badge.length > 0) {
                     badge[0].style = "display: none";
                 }
@@ -110,6 +112,34 @@ content.hideUnreadBadge_ = function() {
             }
         }
     }, constants.StorageType.IGNORE);
+}
+
+content.changeUnreadBadge_ = function(rooms, ignoreRooms) {
+    for (var i in rooms) {
+        if (ignoreRooms.indexOf(i) > -1) {
+            continue;
+        }
+        var room = rooms[i];
+        var badge = room.getElementsByClassName("_unreadBadge unread");
+        var mention = room.getElementsByClassName("_mentionLabel");
+        var add = "";
+        if (badge.length > 0) {
+            add = "*";
+        }
+        if (mention.length > 0) {
+            add = "+";
+        }
+        if (add.length > 0) {
+            var incomplete = room.getElementsByClassName("incomplete")[0];
+            incomplete.style = "display: none";
+        }
+
+        var title = room.getElementsByClassName("chatListTitleArea");
+        if (title.length > 0) {
+            title[0].innerText = add + title[0].innerText;
+            room.style = "font-weight: 400";
+        }
+    }
 }
 
 content.getValueFromStorage_ = function(func, type) {
