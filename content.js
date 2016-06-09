@@ -70,7 +70,7 @@ content.hideTopBarContents_ = function() {
 
 content.hideUnnecessaryRoomItems_ = function() {
     content.hideRoomIcons_();
-    content.hideUnreadBadge_();
+    content.fixRoomListLayout_();
     content.hideRooms_();
 }
 
@@ -90,10 +90,10 @@ content.hideRooms_ = function() {
     }, constants.StorageType.HIDE);
 }
 
-content.hideUnreadBadge_ = function() {
+content.fixRoomListLayout_ = function() {
     content.getValueFromStorage_(function(ignoreRooms) {
         var rooms = content.getRooms_();
-        content.changeUnreadBadge_(rooms, ignoreRooms);
+        content.compressRooms_(rooms, ignoreRooms);
         if (ignoreRooms.length === 0) {
             return;
         }
@@ -102,7 +102,6 @@ content.hideUnreadBadge_ = function() {
                 var room = rooms[ignoreRooms[i]];
                 var badge = room.getElementsByClassName("_unreadBadge unread");
                 var mention = room.getElementsByClassName("_mentionLabel");
-                room.style = "font-weight: 400";
                 if (badge.length > 0) {
                     badge[0].style = "display: none";
                 }
@@ -114,31 +113,50 @@ content.hideUnreadBadge_ = function() {
     }, constants.StorageType.IGNORE);
 }
 
-content.changeUnreadBadge_ = function(rooms, ignoreRooms) {
-    for (var i in rooms) {
-        if (ignoreRooms.indexOf(i) > -1) {
-            continue;
+content.compressRooms_ = function(rooms, ignoreRooms) {
+    content.getValueFromStorage_(function(isCompressRooms) {
+        if (!isCompressRooms) {
+            return;
         }
-        var room = rooms[i];
-        var badge = room.getElementsByClassName("_unreadBadge unread");
-        var mention = room.getElementsByClassName("_mentionLabel");
-        var add = "";
-        if (badge.length > 0) {
-            add = "*";
-        }
-        if (mention.length > 0) {
-            add = "+";
-        }
-        if (add.length > 0) {
-            var incomplete = room.getElementsByClassName("incomplete")[0];
-            incomplete.style = "display: none";
-        }
+        for (var i in rooms) {
+            var room = rooms[i];
+            room.style = "font-weight: 400; height: 16px; min-height: 0px";
+            var pin = room.getElementsByClassName("chatListPin");
+            if (pin.length > 0) {
+                pin[0].style = "top: 1px";
+            }
+            var incomp = room.getElementsByClassName("incomplete");
+            if (incomp.length > 0) {
+                incomp.style = "display: none";
+            }
 
-        var title = room.getElementsByClassName("chatListTitleArea");
-        if (title.length > 0) {
-            title[0].innerText = add + title[0].innerText;
-            room.style = "font-weight: 400";
+            if (ignoreRooms.indexOf(i) > -1) {
+                continue;
+            }
+            content.changeUnreadBadge_(room);
         }
+    }, constants.StorageType.COMPRESS_ROOMS);
+}
+
+content.changeUnreadBadge_ = function(room) {
+    var badge = room.getElementsByClassName("_unreadBadge unread");
+    var mention = room.getElementsByClassName("_mentionLabel");
+    var add = "";
+
+    if (badge.length > 0) {
+        add = "*";
+    }
+    if (mention.length > 0) {
+        add = "+";
+    }
+    if (add.length > 0) {
+        var incomplete = room.getElementsByClassName("incomplete")[0];
+        incomplete.style = "display: none";
+    }
+
+    var title = room.getElementsByClassName("chatListTitleArea");
+    if (title.length > 0) {
+        title[0].innerText = add + title[0].innerText;
     }
 }
 
@@ -151,6 +169,7 @@ content.getValueFromStorage_ = function(func, type) {
     var HIDE_USER = c.StorageType.HIDE_USER;
     var USER_COLOR = c.StorageType.USER_COLOR;
     var OWN_POST = c.StorageType.OWN_POST;
+    var COMPRESS_ROOMS = c.StorageType.COMPRESS_ROOMS;
 
     if (content.values[type] !== undefined) {
         func(content.values[type]);
@@ -170,6 +189,7 @@ content.getValueFromStorage_ = function(func, type) {
                 content.values[HIDE_ROOM] = items[c.HIDE_ROOM_ICON_KEY];
                 content.values[USER_COLOR] = items[c.USER_NAME_COLOR_KEY];
                 content.values[OWN_POST] = items[c.GRAY_OWN_POST_KEY];
+                content.values[COMPRESS_ROOMS] = items[c.COMPRESS_ROOMS_KEY];
 
                 func(content.values[type]);
             });
