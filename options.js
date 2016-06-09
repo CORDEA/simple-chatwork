@@ -31,6 +31,7 @@ options.restore_ = function() {
                 document.getElementById("hide-user-icon").checked = items[c.HIDE_USER_ICON_KEY];
                 document.getElementById("gray-own-post").checked = items[c.GRAY_OWN_POST_KEY];
                 document.getElementById("user-name-color").value = items[c.USER_NAME_COLOR_KEY];
+                document.getElementById("compress-rooms").checked = items[c.COMPRESS_ROOMS_KEY];
             });
 }
 
@@ -41,6 +42,7 @@ options.save_ = function() {
     var isHideUserIcon = document.getElementById("hide-user-icon").checked;
     var isGrayOwnPost = document.getElementById("gray-own-post").checked;
     var userNameColor = document.getElementById("user-name-color").value;
+    var isCompressRooms = document.getElementById("compress-rooms").checked;
     var c = constants;
 
     var set = {};
@@ -50,6 +52,7 @@ options.save_ = function() {
     set[c.HIDE_USER_ICON_KEY] = isHideUserIcon;
     set[c.GRAY_OWN_POST_KEY] = isGrayOwnPost;
     set[c.USER_NAME_COLOR_KEY] = userNameColor;
+    set[c.COMPRESS_ROOMS_KEY] = isCompressRooms;
 
     chrome.storage.sync.set(set
             , function() {

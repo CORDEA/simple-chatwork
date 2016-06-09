@@ -25,7 +25,8 @@ constants.StorageType = {
     HIDE_ROOM: 2,
     HIDE_USER: 3,
     USER_COLOR: 4,
-    OWN_POST: 5
+    OWN_POST: 5,
+    COMPRESS_ROOMS: 6
 };
 
 constants.DEFAULT_TITLE = "Chatwork";
@@ -36,6 +37,7 @@ constants.HIDE_USER_ICON_KEY = "HideUserIcon";
 constants.HIDE_ROOM_ICON_KEY = "HideRoomIcon";
 constants.USER_NAME_COLOR_KEY = "UserNameColor";
 constants.GRAY_OWN_POST_KEY = "GrayOwnPost";
+constants.COMPRESS_ROOMS_KEY = "CompressRooms";
 
 constants.getDefaultValues = function() {
     var defaults = {};
@@ -45,5 +47,6 @@ constants.getDefaultValues = function() {
     defaults[constants.HIDE_USER_ICON_KEY] = false;
     defaults[constants.GRAY_OWN_POST_KEY] = false;
     defaults[constants.USER_NAME_COLOR_KEY] = "";
+    defaults[constants.COMPRESS_ROOMS_KEY] = false;
     return defaults;
 }
