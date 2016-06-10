@@ -127,7 +127,7 @@ content.compressRooms_ = function(rooms, ignoreRooms) {
             }
             var incomp = room.getElementsByClassName("incomplete");
             if (incomp.length > 0) {
-                incomp.style = "display: none";
+                incomp[0].style = "display: none";
             }
 
             if (ignoreRooms.indexOf(i) > -1) {
