@@ -170,6 +170,7 @@ content.getValueFromStorage_ = function(func, type) {
     var USER_COLOR = c.StorageType.USER_COLOR;
     var OWN_POST = c.StorageType.OWN_POST;
     var COMPRESS_ROOMS = c.StorageType.COMPRESS_ROOMS;
+    var NG_WORD_LIST = c.StorageType.NG_WORD_LIST;
 
     if (content.values[type] !== undefined) {
         func(content.values[type]);
@@ -182,9 +183,13 @@ content.getValueFromStorage_ = function(func, type) {
             , function(items) {
                 var hideListString = items[c.HIDE_LIST_KEY];
                 var ignoreListString = items[c.IGNORE_LIST_KEY];
+                var ngWordListString = items[c.NG_WORD_LIST_KEY];
 
                 content.values[HIDE] = hideListString.split("\n");
                 content.values[IGNORE] = ignoreListString.split("\n");
+                content.values[NG_WORD_LIST] = ngWordListString.split("\n").map(function (value) {
+                    return value.split(",")
+                });
                 content.values[HIDE_USER] = items[c.HIDE_USER_ICON_KEY];
                 content.values[HIDE_ROOM] = items[c.HIDE_ROOM_ICON_KEY];
                 content.values[USER_COLOR] = items[c.USER_NAME_COLOR_KEY];
@@ -241,6 +246,7 @@ content.fixTimelineLayout_ = function() {
         if (name !== undefined && name.includes("chatTimeLineMessage")) {
             var nameContainer = timeline.getElementsByClassName("_speakerName chatName");
             content.hideUserIcon_(timeline);
+            content.replaceNgWord_(timeline);
             var org = timeline.getElementsByClassName("chatNameOrgname");
             var span = nameContainer[0].getElementsByTagName("span");
             if (org.length > 0) {
@@ -253,6 +259,21 @@ content.fixTimelineLayout_ = function() {
             }
         }
     }
+}
+
+content.replaceNgWord_ = function(timeline) {
+    content.getValueFromStorage_(function(ngWords) {
+        var message = timeline.getElementsByClassName("chatTimeLineMessageArea")[0];
+        var pre = message.getElementsByTagName("pre")[0];
+        var text = pre.innerHTML
+        for (var i in ngWords) {
+            if (ngWords[i].length === 2) {
+                if (text.includes(ngWords[i][0])) {
+                    pre.innerHTML = text.replace(new RegExp(ngWords[i][0], "g"), ngWords[i][1]);
+                }
+            }
+        }
+    }, constants.StorageType.NG_WORD_LIST);
 }
 
 content.hideUserIcon_ = function(timeline) {

@@ -32,12 +32,14 @@ options.restore_ = function() {
                 document.getElementById("gray-own-post").checked = items[c.GRAY_OWN_POST_KEY];
                 document.getElementById("user-name-color").value = items[c.USER_NAME_COLOR_KEY];
                 document.getElementById("compress-rooms").checked = items[c.COMPRESS_ROOMS_KEY];
+                document.getElementById("ng-word-list").value = items[c.NG_WORD_LIST_KEY];
             });
 }
 
 options.save_ = function() {
     var hideList = document.getElementById("hide-list").value;
     var ignoreList = document.getElementById("ignore-list").value;
+    var ngWordList = document.getElementById("ng-word-list").value;
     var isHideRoomIcon = document.getElementById("hide-room-icon").checked;
     var isHideUserIcon = document.getElementById("hide-user-icon").checked;
     var isGrayOwnPost = document.getElementById("gray-own-post").checked;
@@ -48,6 +50,7 @@ options.save_ = function() {
     var set = {};
     set[c.HIDE_LIST_KEY] = hideList;
     set[c.IGNORE_LIST_KEY] = ignoreList;
+    set[c.NG_WORD_LIST_KEY] = ngWordList;
     set[c.HIDE_ROOM_ICON_KEY] = isHideRoomIcon;
     set[c.HIDE_USER_ICON_KEY] = isHideUserIcon;
     set[c.GRAY_OWN_POST_KEY] = isGrayOwnPost;
