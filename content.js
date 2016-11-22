@@ -43,6 +43,38 @@ content.init_ = function() {
     content.hideUnnecessaryRoomItems_();
     content.hideTopBarContents_();
     content.fixTimelineLayout_();
+
+    content.addChatSendTools_();
+}
+
+content.addChatSendTools_ = function() {
+    var area = document.getElementById("_chatSendTool");
+    var textArea = document.getElementById("_chatText");
+    content.getValueFromStorage_(function(scWords) {
+        if (scWords.length === 0) {
+            return;
+        }
+        var arr = [];
+        for (var i in scWords) {
+            var li = document.createElement("li");
+            var button = document.createElement("input");
+            button.type = "button";
+            button.value = scWords[i][0];
+            button.addEventListener("click", function(word) {
+                return function() {
+                    if (textArea.value) {
+                        textArea.value = textArea.value + "\n" + word;
+                    } else {
+                        textArea.value = word;
+                    }
+                }
+            }(scWords[i]));
+            arr.push(button);
+
+            li.appendChild(button);
+            area.appendChild(li);
+        }
+    }, constants.StorageType.SC_WORD_LIST);
 }
 
 content.fixTitle_ = function(mutations) {
@@ -171,6 +203,7 @@ content.getValueFromStorage_ = function(func, type) {
     var OWN_POST = c.StorageType.OWN_POST;
     var COMPRESS_ROOMS = c.StorageType.COMPRESS_ROOMS;
     var NG_WORD_LIST = c.StorageType.NG_WORD_LIST;
+    var SC_WORD_LIST = c.StorageType.SC_WORD_LIST;
 
     if (content.values[type] !== undefined) {
         func(content.values[type]);
@@ -184,11 +217,15 @@ content.getValueFromStorage_ = function(func, type) {
                 var hideListString = items[c.HIDE_LIST_KEY];
                 var ignoreListString = items[c.IGNORE_LIST_KEY];
                 var ngWordListString = items[c.NG_WORD_LIST_KEY];
+                var scWordListString = items[c.SC_WORD_LIST_KEY];
 
                 content.values[HIDE] = hideListString.split("\n");
                 content.values[IGNORE] = ignoreListString.split("\n");
                 content.values[NG_WORD_LIST] = ngWordListString.split("\n").map(function (value) {
                     return value.split(",")
+                });
+                content.values[SC_WORD_LIST] = scWordListString.split("\n").filter(function (value) {
+                    return value
                 });
                 content.values[HIDE_USER] = items[c.HIDE_USER_ICON_KEY];
                 content.values[HIDE_ROOM] = items[c.HIDE_ROOM_ICON_KEY];

@@ -33,6 +33,7 @@ options.restore_ = function() {
                 document.getElementById("user-name-color").value = items[c.USER_NAME_COLOR_KEY];
                 document.getElementById("compress-rooms").checked = items[c.COMPRESS_ROOMS_KEY];
                 document.getElementById("ng-word-list").value = items[c.NG_WORD_LIST_KEY];
+                document.getElementById("sc-word-list").value = items[c.SC_WORD_LIST_KEY];
             });
 }
 
@@ -40,6 +41,7 @@ options.save_ = function() {
     var hideList = document.getElementById("hide-list").value;
     var ignoreList = document.getElementById("ignore-list").value;
     var ngWordList = document.getElementById("ng-word-list").value;
+    var scWordList = document.getElementById("sc-word-list").value;
     var isHideRoomIcon = document.getElementById("hide-room-icon").checked;
     var isHideUserIcon = document.getElementById("hide-user-icon").checked;
     var isGrayOwnPost = document.getElementById("gray-own-post").checked;
@@ -51,6 +53,7 @@ options.save_ = function() {
     set[c.HIDE_LIST_KEY] = hideList;
     set[c.IGNORE_LIST_KEY] = ignoreList;
     set[c.NG_WORD_LIST_KEY] = ngWordList;
+    set[c.SC_WORD_LIST_KEY] = scWordList;
     set[c.HIDE_ROOM_ICON_KEY] = isHideRoomIcon;
     set[c.HIDE_USER_ICON_KEY] = isHideUserIcon;
     set[c.GRAY_OWN_POST_KEY] = isGrayOwnPost;

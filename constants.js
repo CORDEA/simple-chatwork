@@ -27,7 +27,8 @@ constants.StorageType = {
     USER_COLOR: 4,
     OWN_POST: 5,
     COMPRESS_ROOMS: 6,
-    NG_WORD_LIST: 7
+    NG_WORD_LIST: 7,
+    SC_WORD_LIST: 8
 };
 
 constants.DEFAULT_TITLE = "Chatwork";
@@ -35,6 +36,7 @@ constants.DEFAULT_TITLE = "Chatwork";
 constants.HIDE_LIST_KEY = "HideList";
 constants.IGNORE_LIST_KEY = "IgnoreList";
 constants.NG_WORD_LIST_KEY = "NgWordList";
+constants.SC_WORD_LIST_KEY = "ScWordList";
 constants.HIDE_USER_ICON_KEY = "HideUserIcon";
 constants.HIDE_ROOM_ICON_KEY = "HideRoomIcon";
 constants.USER_NAME_COLOR_KEY = "UserNameColor";
@@ -46,6 +48,7 @@ constants.getDefaultValues = function() {
     defaults[constants.HIDE_LIST_KEY] = ""
     defaults[constants.IGNORE_LIST_KEY] = ""
     defaults[constants.NG_WORD_LIST_KEY] = "";
+    defaults[constants.SC_WORD_LIST_KEY] = "";
     defaults[constants.HIDE_ROOM_ICON_KEY] = false;
     defaults[constants.HIDE_USER_ICON_KEY] = false;
     defaults[constants.GRAY_OWN_POST_KEY] = false;
