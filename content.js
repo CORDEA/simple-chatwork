@@ -57,6 +57,7 @@ content.addChatSendTools_ = function() {
         var arr = [];
         for (var i in scWords) {
             var li = document.createElement("li");
+            li.style = "display: inline-block";
             var button = document.createElement("input");
             button.type = "button";
             button.value = scWords[i][0];
