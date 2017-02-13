@@ -153,12 +153,17 @@ content.compressRooms_ = function(rooms, ignoreRooms) {
         }
         for (var i in rooms) {
             var room = rooms[i];
-            room.style = "font-weight: 400; height: 16px; min-height: 0px";
-            var pin = room.getElementsByClassName("chatListPin");
+            room.style = "height: 16px; min-height: 0px;";
+
+            var title = room.getElementsByClassName("roomListItem__roomName roomListItem__roomName--unread");
+            if (title.length > 0) {
+                title[0].style = "font-weight: 400;";
+            }
+            var pin = room.getElementsByClassName("roomListItem__pinContainer");
             if (pin.length > 0) {
                 pin[0].style = "top: 1px";
             }
-            var incomp = room.getElementsByClassName("incomplete");
+            var incomp = room.getElementsByClassName("roomListBadges");
             if (incomp.length > 0) {
                 incomp[0].style = "display: none";
             }
@@ -172,7 +177,7 @@ content.compressRooms_ = function(rooms, ignoreRooms) {
 }
 
 content.changeUnreadBadge_ = function(room) {
-    var badge = room.getElementsByClassName("_unreadBadge unread");
+    var badge = room.getElementsByClassName("roomListBadges__unreadBadge _unreadBadge");
     var mention = room.getElementsByClassName("_mentionLabel");
     var add = "";
 
@@ -183,11 +188,13 @@ content.changeUnreadBadge_ = function(room) {
         add = "+";
     }
     if (add.length > 0) {
-        var incomplete = room.getElementsByClassName("incomplete")[0];
-        incomplete.style = "display: none";
+        var incomplete = room.getElementsByClassName("roomListBadges");
+        if (incomplete.length > 0) {
+            incomplete[0].style = "display: none";
+        }
     }
 
-    var title = room.getElementsByClassName("chatListTitleArea");
+    var title = room.getElementsByClassName("roomListItem__roomName roomListItem__roomName--unread");
     if (title.length > 0) {
         title[0].innerText = add + title[0].innerText;
     }
