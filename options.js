@@ -25,28 +25,28 @@ options.restore_ = function() {
 
     chrome.storage.sync.get(get
             , function(items) {
-                document.getElementById("hide-list").value = items[c.HIDE_LIST_KEY];
-                document.getElementById("ignore-list").value = items[c.IGNORE_LIST_KEY];
-                document.getElementById("hide-room-icon").checked = items[c.HIDE_ROOM_ICON_KEY];
-                document.getElementById("hide-user-icon").checked = items[c.HIDE_USER_ICON_KEY];
-                document.getElementById("gray-own-post").checked = items[c.GRAY_OWN_POST_KEY];
-                document.getElementById("user-name-color").value = items[c.USER_NAME_COLOR_KEY];
-                document.getElementById("compress-rooms").checked = items[c.COMPRESS_ROOMS_KEY];
-                document.getElementById("ng-word-list").value = items[c.NG_WORD_LIST_KEY];
-                document.getElementById("sc-word-list").value = items[c.SC_WORD_LIST_KEY];
+                document.getElementById('hide-list').value = items[c.HIDE_LIST_KEY];
+                document.getElementById('ignore-list').value = items[c.IGNORE_LIST_KEY];
+                document.getElementById('hide-room-icon').checked = items[c.HIDE_ROOM_ICON_KEY];
+                document.getElementById('hide-user-icon').checked = items[c.HIDE_USER_ICON_KEY];
+                document.getElementById('gray-own-post').checked = items[c.GRAY_OWN_POST_KEY];
+                document.getElementById('user-name-color').value = items[c.USER_NAME_COLOR_KEY];
+                document.getElementById('compress-rooms').checked = items[c.COMPRESS_ROOMS_KEY];
+                document.getElementById('ng-word-list').value = items[c.NG_WORD_LIST_KEY];
+                document.getElementById('sc-word-list').value = items[c.SC_WORD_LIST_KEY];
             });
 }
 
 options.save_ = function() {
-    var hideList = document.getElementById("hide-list").value;
-    var ignoreList = document.getElementById("ignore-list").value;
-    var ngWordList = document.getElementById("ng-word-list").value;
-    var scWordList = document.getElementById("sc-word-list").value;
-    var isHideRoomIcon = document.getElementById("hide-room-icon").checked;
-    var isHideUserIcon = document.getElementById("hide-user-icon").checked;
-    var isGrayOwnPost = document.getElementById("gray-own-post").checked;
-    var userNameColor = document.getElementById("user-name-color").value;
-    var isCompressRooms = document.getElementById("compress-rooms").checked;
+    var hideList = document.getElementById('hide-list').value;
+    var ignoreList = document.getElementById('ignore-list').value;
+    var ngWordList = document.getElementById('ng-word-list').value;
+    var scWordList = document.getElementById('sc-word-list').value;
+    var isHideRoomIcon = document.getElementById('hide-room-icon').checked;
+    var isHideUserIcon = document.getElementById('hide-user-icon').checked;
+    var isGrayOwnPost = document.getElementById('gray-own-post').checked;
+    var userNameColor = document.getElementById('user-name-color').value;
+    var isCompressRooms = document.getElementById('compress-rooms').checked;
     var c = constants;
 
     var set = {};
@@ -62,18 +62,18 @@ options.save_ = function() {
 
     chrome.storage.sync.set(set
             , function() {
-                document.getElementById("submit").value = "Saved";
+                document.getElementById('submit').value = 'Saved';
                 options.restore_();
             });
 }
 
 options.windowOnLoad_ = function() {
     options.restore_();
-    document.getElementById("submit").addEventListener("click",options.save_);
+    document.getElementById('submit').addEventListener('click',options.save_);
 }
 
 options.initialize_ = function() {
-    window.addEventListener("load", options.windowOnLoad_);
+    window.addEventListener('load', options.windowOnLoad_);
 }
 
 options.initialize_();
