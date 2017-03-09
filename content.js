@@ -292,6 +292,7 @@ content.fixTimelineLayout_ = function() {
             var nameContainer = timeline.getElementsByClassName('_speakerName chatName');
             content.hideUserIcon_(timeline);
             content.replaceNgWord_(timeline);
+            content.fixMessageIcon_(timeline);
             var org = timeline.getElementsByClassName('chatNameOrgname');
             var span = nameContainer[0].getElementsByTagName('span');
             if (org.length > 0) {
@@ -337,6 +338,30 @@ content.hideUserIcon_ = function(timeline) {
     }, constants.StorageType.HIDE_USER);
 }
 
+content.fixMessageIcon_ = function(timeline) {
+    var message = timeline.getElementsByClassName('chatTimeLineMessageArea')[0];
+    var badges = message.getElementsByClassName('messageBadge');
+    for (var i in badges) {
+        var badge = badges[i];
+        if (badge instanceof HTMLElement) {
+            var img = badge.getElementsByTagName('img');
+            if (img.length > 0) {
+                img[0].style = 'display: none';
+            }
+            var reply = badge.getElementsByClassName('chatTimeLineReply _replyMessage _showDescription');
+            if (reply.length > 0) {
+                reply[0].style = 'border-radius: 3px; padding: 2px 4px;';
+                var icon = reply[0].getElementsByClassName('chatTimeLineReply__replyIcon');
+                icon[0].style = 'display: none';
+            }
+            var to = badge.getElementsByClassName('chatTimeLineTo');
+            if (to.length > 0) {
+                to[0].style = 'border-radius: 3px';
+            }
+        }
+    }
+}
+
 content.changeGrayOfOwnPosts_ = function(timeline, span) {
     content.getValueFromStorage_(function(isOwnPost) {
         if (!isOwnPost) {
@@ -351,11 +376,11 @@ content.changeGrayOfOwnPosts_ = function(timeline, span) {
             pre[0].style = 'color: gray';
             var repDiv = pre[0].getElementsByClassName('chatTimeLineReply _replyMessage');
             if (repDiv.length > 0) {
-                repDiv[0].style = 'background: gray';
+                repDiv[0].style = 'border-radius: 3px; background: gray;';
             }
             var toSpan = pre[0].getElementsByClassName('chatTimeLineTo');
             if (toSpan.length > 0) {
-                toSpan[0].style = 'background: gray';
+                toSpan[0].style = 'border-radius: 3px; background: gray;';
             }
         }
     }, constants.StorageType.OWN_POST);
